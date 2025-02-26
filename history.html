@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filing History - Tax Assistant</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Tax Assistant</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Dashboard</a></li>
+                <li><a href="index.html#calculator">Tax Calculator</a></li>
+                <li><a href="history.html" class="active">Filing History</a></li>
+                <li><a href="account.html">Account</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="history" class="history-section">
+            <h2>Filing History</h2>
+            
+            <div class="history-controls">
+                <button onclick="clearHistory()" class="secondary-btn">Clear History</button>
+            </div>
+
+            <div id="history-list" class="history-container">
+                <!-- History items will be inserted here -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Tax Assistant. All rights reserved.</p>
+    </footer>
+
+    <script src="js/account.js"></script>
+    <script src="js/history.js"></script>
+    <script>
+        // Update history display
+        function updateHistoryDisplay() {
+            const historyContainer = document.getElementById('history-list');
+            historyContainer.innerHTML = window.historyManager.generateHistoryHTML();
+        }
+
+        // Clear all history
+        function clearHistory() {
+            if (confirm('Are you sure you want to clear all filing history? This cannot be undone.')) {
+                window.historyManager.clearHistory();
+                updateHistoryDisplay();
+            }
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            if (!window.accountManager.isLoggedIn()) {
+                window.location.href = 'account.html';
+                return;
+            }
+
+            // Display history
+            updateHistoryDisplay();
+        });
+    </script>
+
+    <style>
+        .history-section {
+            padding: 2rem;
+        }
+
+        .history-controls {
+            margin-bottom: 2rem;
+            text-align: right;
+        }
+
+        .history-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .history-item {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            padding: 1.5rem;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .history-header h3 {
+            margin: 0;
+            color: #2c3e50;
+        }
+
+        .delete-filing {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .delete-filing:hover {
+            background: #c0392b;
+        }
+
+        .history-details {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-row .label {
+            font-weight: 500;
+            color: #666;
+        }
+
+        .detail-row .value {
+            color: #2c3e50;
+        }
+
+        .no-history {
+            text-align: center;
+            color: #666;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 600px) {
+            .history-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+    </style>
+    <script src="taxCalculator.js"></script>
+    <script src="app.js"></script>
+    <script src="account.js"></script>
+    <script src="history.js"></script>
+</body>
+</html>

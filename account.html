@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account - Tax Assistant</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Tax Assistant</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Dashboard</a></li>
+                <li><a href="index.html#calculator">Tax Calculator</a></li>
+                <li><a href="history.html">Filing History</a></li>
+                <li><a href="account.html" class="active">Account</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="account" class="account-section">
+            <h2>Account Management</h2>
+            
+            <!-- Login Form -->
+            <div id="login-form" class="auth-form">
+                <h3>Login</h3>
+                <div id="login-error" class="error-message" style="display: none;"></div>
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="primary-btn">Login</button>
+                </form>
+            </div>
+
+            <!-- Profile Section -->
+            <div id="profile-section" class="profile-section" style="display: none;">
+                <h3>Your Profile</h3>
+                <div class="profile-info">
+                    <div class="info-row">
+                        <span class="label">Email:</span>
+                        <span id="profile-email" class="value"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Name:</span>
+                        <span id="profile-name" class="value"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Last Login:</span>
+                        <span id="profile-last-login" class="value"></span>
+                    </div>
+                </div>
+                <button onclick="handleLogout()" class="secondary-btn">Logout</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Tax Assistant. All rights reserved.</p>
+    </footer>
+
+    <script src="js/account.js"></script>
+    <script>
+        // Check login status on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Account page loaded');
+            checkLoginStatus();
+        });
+
+        // Handle login form submission
+        function handleLogin(event) {
+            event.preventDefault();
+            console.log('Login form submitted');
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('login-error');
+
+            try {
+                // Attempt login
+                window.accountManager.login(email, password);
+                console.log('Login successful');
+                
+                // Show profile (the redirect should happen automatically)
+                showProfile();
+            } catch (error) {
+                console.error('Login error:', error);
+                errorDiv.textContent = error.message;
+                errorDiv.style.display = 'block';
+            }
+
+            return false;
+        }
+
+        // Handle logout
+        function handleLogout() {
+            console.log('Logout requested');
+            window.accountManager.logout();
+            showLoginForm();
+        }
+
+        // Check login status
+        function checkLoginStatus() {
+            console.log('Checking login status');
+            if (window.accountManager.isLoggedIn()) {
+                showProfile();
+            } else {
+                showLoginForm();
+            }
+        }
+
+        // Show profile section
+        function showProfile() {
+            console.log('Showing profile');
+            const user = window.accountManager.getProfile();
+            
+            document.getElementById('profile-email').textContent = user.email;
+            document.getElementById('profile-name').textContent = user.name;
+            document.getElementById('profile-last-login').textContent = new Date(user.lastLogin).toLocaleString();
+            
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('profile-section').style.display = 'block';
+        }
+
+        // Show login form
+        function showLoginForm() {
+            console.log('Showing login form');
+            document.getElementById('login-form').style.display = 'block';
+            document.getElementById('profile-section').style.display = 'none';
+            document.getElementById('login-error').style.display = 'none';
+        }
+    </script>
+
+    <style>
+        .account-section {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .auth-form {
+            margin-top: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c00;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+
+        .profile-info {
+            margin: 2rem 0;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-row .label {
+            font-weight: 500;
+            color: #666;
+        }
+
+        .info-row .value {
+            color: #2c3e50;
+        }
+
+        .primary-btn, .secondary-btn {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .primary-btn {
+            background: #3498db;
+            color: white;
+        }
+
+        .primary-btn:hover {
+            background: #2980b9;
+        }
+
+        .secondary-btn {
+            background: #e74c3c;
+            color: white;
+            margin-top: 1rem;
+        }
+
+        .secondary-btn:hover {
+            background: #c0392b;
+        }
+    </style>
+    <script src="taxCalculator.js"></script>
+    <script src="app.js"></script>
+    <script src="account.js"></script>
+    <script src="history.js"></script>
+</body>
+</html>
